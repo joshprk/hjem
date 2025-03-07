@@ -9,7 +9,7 @@
   inherit (lib.lists) filter map flatten concatLists;
   inherit (lib.attrsets) filterAttrs mapAttrs' attrValues mapAttrsToList;
   inherit (lib.trivial) flip;
-  inherit (lib.types) bool attrsOf submoduleWith listOf raw attrs;
+  inherit (lib.types) bool attrsOf submoduleWith listOf raw attrs either package enum;
 
   cfg = config.hjem;
 
@@ -66,6 +66,23 @@ in {
       description = "Home configurations to be managed";
     };
 
+    linker = mkOption {
+      type = either package (enum ["systemd-tmpfiles" "smfh"]);
+      default = "systemd-tmpfiles";
+      description = ''
+        The backend Hjem will use to link files in place.
+
+        * `systemd-tmpfiles` is th current implementation, lacks the ability to clean up
+          files that are no longer managed.
+        * `smfh` (Sleek Manifest File Handler) is the new implementation, set to be the
+          default once stable
+
+        If a value with the `package` type is passed, then the executable of the package
+        (acquired via `lib.getExe`) will be executed verbatim. Use the package option
+        only if you know what you are doing.
+      '';
+    };
+
     extraModules = mkOption {
       type = listOf raw;
       default = [];
@@ -93,7 +110,12 @@ in {
         inherit name;
         value.packages = packages;
       }) (filterAttrs (_: u: (u.enable && u.packages != [])) cfg.users);
+    }
 
+    # If using systemd-tmpfiles as a linker backend, then map files submodule into
+    # systemd.user.tmpfiles. Be careful to retain compatibility with the schema
+    # while altering the files submodule.
+    (mkIf (cfg.linker == "systemd-tmpfiles") {
       systemd.user.tmpfiles.users = mapAttrs' (name: {files, ...}: {
         inherit name;
         value.rules = map (
@@ -110,7 +132,7 @@ in {
             "${mode} '${file.target}' - - - - ${file.source}"
         ) (filter (f: f.enable && f.source != null) (attrValues files));
       }) (filterAttrs (_: u: (u.enable && u.files != {})) cfg.users);
-    }
+    })
 
     (mkIf (cfg.users != {}) {
       warnings = flatten (flip mapAttrsToList cfg.users (user: config:
