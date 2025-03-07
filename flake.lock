@@ -16,9 +16,82 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1741173522,
+        "narHash": "sha256-k7VSqvv0r1r53nUI/IfPHCppkUAddeXn843YlAC5DR0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "d69ab0d71b22fa1ce3dbeff666e6deb4917db049",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "smfh": "smfh"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "smfh",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1741228283,
+        "narHash": "sha256-VzqI+k/eoijLQ5am6rDFDAtFAbw8nltXfLBC6SIEJAE=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "38e9826bc4296c9daf18bc1e6aa299f3e932a403",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "smfh": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2",
+        "rust-overlay": "rust-overlay",
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1741311645,
+        "narHash": "sha256-hwQ+t6M71EVpEWU7Liama18R3Ofggcfel0vpKM6P4uo=",
+        "owner": "Gerg-L",
+        "repo": "smfh",
+        "rev": "5913b9ba1666cd5ebe737f5ca2dfab83f73bc95b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gerg-L",
+        "repo": "smfh",
+        "type": "github"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     }
   },
