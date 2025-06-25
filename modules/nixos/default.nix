@@ -75,10 +75,10 @@
         [
           ../common/user.nix
           ({name, ...}: let
-            #user = getAttr name config.users.users;
+            user = getAttr name config.users.users;
           in {
-            user = name;
-            directory = "/home/${name}";
+            user = "joshua";
+            directory = "/home/joshua";
             clobberFiles = cfg.clobberByDefault;
           })
         ]
