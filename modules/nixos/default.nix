@@ -74,11 +74,9 @@
       [
         [
           ../common/user.nix
-          ({name, ...}: let
-            user = getAttr name config.users.users;
-          in {
-            user = user.name;
-            directory = user.home;
+          ({name, ...}: {
+            user = name;
+            directory = "${;
             clobberFiles = cfg.clobberByDefault;
           })
         ]
@@ -169,7 +167,11 @@ in {
 
   config = mkMerge [
     {
-      users.users = (mapAttrs (_: v: {inherit (v) packages;})) enabledUsers;
+      users.users = lib.mapAttrs (name: userCfg:
+        userCfg // {
+          packages = userCfg.packages or (config.hjem.users.${name}.packages or []);
+        }
+      ) config.users.users;
       assertions =
         concatLists
         (mapAttrsToList (user: config:
