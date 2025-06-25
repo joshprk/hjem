@@ -170,11 +170,7 @@ in {
   config = mkMerge [
     {
       #users.users = (mapAttrs (_: v: {inherit (v) packages;})) enabledUsers;
-      users.users = lib.mapAttrs (name: userCfg:
-        userCfg // {
-          packages = userCfg.packages or (config.hjem.users.${name}.packages or []);
-        }
-      ) config.users.users;
+      users.users = genAttrs (builtins.attrNames users.users) (v: {inherit (v) packages;});
       assertions =
         concatLists
         (mapAttrsToList (user: config:
