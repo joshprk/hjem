@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  inherit (lib.attrsets) filterAttrs mapAttrsToList;
+  inherit (lib.attrsets) filterAttrs genAttrs mapAttrsToList;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) literalExpression mkOption;
   inherit (lib.strings) optionalString;
