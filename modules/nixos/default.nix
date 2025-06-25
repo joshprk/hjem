@@ -75,10 +75,10 @@
         [
           ../common/user.nix
           ({name, ...}: let
-            user = getAttr name config.users.users;
+            #user = getAttr name config.users.users;
           in {
-            user = user.name;
-            directory = user.home;
+            user = name;
+            directory = "/home/${name}";
             clobberFiles = cfg.clobberByDefault;
           })
         ]
@@ -169,8 +169,7 @@ in {
 
   config = mkMerge [
     {
-      #users.users = (mapAttrs (_: v: {inherit (v) packages;})) enabledUsers;
-      users.users = genAttrs (builtins.attrNames enabledUsers) (v: {inherit (v) packages;});
+      users.users = (mapAttrs (_: v: {inherit (v) packages;})) enabledUsers;
       assertions =
         concatLists
         (mapAttrsToList (user: config:
